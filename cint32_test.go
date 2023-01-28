@@ -28,8 +28,8 @@ func Test_empty_intslice_yields_empty_byteslice(t *testing.T) {
 }
 
 func Test_small_int_yields_one_byte(t *testing.T) {
-	yield := cint32.Compress(int32(0), int32(-127+1), int32(128-1))
 	want := []byte{0, 130, 127}
+	yield := cint32.Compress(int32(0), int32(-127+1), int32(128-1))
 
 	if !bytes.Equal(yield, want) {
 		t.Errorf("compressed = %v; want %v", yield, want)
@@ -37,13 +37,6 @@ func Test_small_int_yields_one_byte(t *testing.T) {
 }
 
 func Test_medium_int_yields_three_bytes(t *testing.T) {
-	yield := cint32.Compress([]int32{
-		-127,
-		128,
-		-0x8000 + 1,
-		0x8000 - 1,
-	}...)
-
 	want := []byte{
 		128, 129, 255,
 		128, 128, 0,
@@ -51,21 +44,28 @@ func Test_medium_int_yields_three_bytes(t *testing.T) {
 		128, 255, 127,
 	}
 
+	yield := cint32.Compress([]int32{
+		-127,
+		128,
+		-0x8000 + 1,
+		0x8000 - 1,
+	}...)
+
 	if !bytes.Equal(yield, want) {
 		t.Errorf("compressed = %v; want %v", yield, want)
 	}
 }
 
 func Test_large_int_yields_five_bytes(t *testing.T) {
-	yield := cint32.Compress([]int32{
-		-0x8000,
-		0x8000,
-	}...)
-
 	want := []byte{
 		129, 0, 128, 255, 255,
 		129, 0, 128, 0, 0,
 	}
+
+	yield := cint32.Compress([]int32{
+		-0x8000,
+		0x8000,
+	}...)
 
 	if !bytes.Equal(yield, want) {
 		t.Errorf("compressed = %v; want %v", yield, want)
