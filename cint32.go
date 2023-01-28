@@ -51,6 +51,6 @@ func Decompress[T ~uint8](elems ...T) ([]int32, error) {
 }
 
 func utos[T ~uint8](i T) int8 {
-	// C-style type casting unsiged to signed
+	// C-style type casting unsigned to signed
 	return int8(*(*int8)(unsafe.Pointer(&i)))
 }
