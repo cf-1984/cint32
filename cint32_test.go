@@ -22,8 +22,9 @@ func equal[T ~int32](slice []T, elems ...T) bool {
 }
 
 func Test_empty_intslice_yields_empty_byteslice(t *testing.T) {
-	if yield := cint32.Compress([]int32{}...); len(yield) != 0 {
-		t.Errorf("length = %d; want 0", len(yield))
+	want := 0
+	if yield := cint32.Compress([]int32{}...); len(yield) != want {
+		t.Errorf("length = %d; want %d", len(yield), want)
 	}
 }
 
@@ -73,10 +74,11 @@ func Test_large_int_yields_five_bytes(t *testing.T) {
 }
 
 func Test_empty_byteslice_yields_empty_intslice(t *testing.T) {
+	want := 0
 	if yield, err := cint32.Decompress([]byte{}...); err != nil {
 		t.Errorf("err != nil; want nil")
-	} else if len(yield) != 0 {
-		t.Errorf("length = %d; want 0", len(yield))
+	} else if len(yield) != want {
+		t.Errorf("length = %d; want %d", len(yield), want)
 	}
 }
 
