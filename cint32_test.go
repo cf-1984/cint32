@@ -7,13 +7,13 @@ import (
 	"github.com/cf-1984/cint32"
 )
 
-func equal[T ~int32](sliceA []T, elems ...T) bool {
-	if len(sliceA) != len(elems) {
+func equal[T ~int32](slice []T, elems ...T) bool {
+	if len(slice) != len(elems) {
 		return false
 	}
 
-	for i := 0; i < len(sliceA); i++ {
-		if sliceA[i] != elems[i] {
+	for i := 0; i < len(slice); i++ {
+		if slice[i] != elems[i] {
 			return false
 		}
 	}
@@ -145,7 +145,6 @@ func Test_five_bytes_yields_large_int(t *testing.T) {
 func Test_roundtrip_yields_input_values(t *testing.T) {
 	want := []int32{0, 123, 45678, -567, -789456}
 	yield, err := cint32.Decompress(cint32.Compress(want...)...)
-
 	if err != nil {
 		t.Errorf("err != nil; want nil")
 	} else if !equal(yield, want...) {

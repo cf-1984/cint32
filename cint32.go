@@ -30,13 +30,13 @@ func Decompress[T ~uint8](elems ...T) ([]int32, error) {
 	buf := []int32{}
 	for i := 0; i < size; i++ {
 		switch e := elems[i:]; e[0] {
-		case 0x81:
+		case 129:
 			if size-i < 5 {
 				return nil, fmt.Errorf("insufficent amount of bytes to decompress: expected 5, received %d", size-i)
 			}
 			buf = append(buf, int32(e[1])|int32(e[2])<<8|int32(e[3])<<16|int32(utos(e[4]))<<24)
 			i += 4
-		case 0x80:
+		case 128:
 			if size-i < 3 {
 				return nil, fmt.Errorf("insufficent amount of bytes to decompress: expected 3, received %d", size-i)
 			}
