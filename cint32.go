@@ -5,6 +5,12 @@ import (
 	"unsafe"
 )
 
+// Simple compression of 32-bit integers, which assumes mostly small values.
+//
+//	Values between -127 and 128 (small ints) compress into 1 byte
+//	The excluded edge values of small ints are used as 1 byte prefixes
+//	Medium: 128, values betweeen -0x8000 and 0x8000 compress into 2 bytes (3 bytes total)
+//	Large:	129 (~ -127), all larger values compress into 4 bytes (5 bytes total)
 func Compress[T ~int32](elems ...T) []byte {
 	buf := []byte{}
 	for _, e := range elems {
@@ -21,6 +27,13 @@ func Compress[T ~int32](elems ...T) []byte {
 	return buf
 }
 
+// Decompresses simple 32-bit compressed bytes.
+//
+//	Interpretes first byte as prefix, where 128 -> medium integer and 129 -> large integer
+//	Any other value is being treated as small integer
+//	Small:	1 byte
+//	Medium:	3 bytes
+//	Large:	5 bytes
 func Decompress[T ~uint8](elems ...T) ([]int32, error) {
 	size := len(elems)
 	if size < 1 {
@@ -50,7 +63,7 @@ func Decompress[T ~uint8](elems ...T) ([]int32, error) {
 	return buf, nil
 }
 
+// C-style type casting unsigned to signed 8-bit integers
 func utos[T ~uint8](i T) int8 {
-	// C-style type casting unsigned to signed
 	return int8(*(*int8)(unsafe.Pointer(&i)))
 }
